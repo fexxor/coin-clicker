@@ -1,0 +1,407 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+body {
+  display: block !important;
+  font-family: "Source Sans 3", sans-serif;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+main {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1rem 5rem;
+
+  &.gold, &.gold section, &.gold button {
+    background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+                radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%) !important;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 3px 10px black
+  }
+}
+
+section > h2 {
+  font-weight: bolder;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  width: 50%;
+  text-align: center;
+}
+
+.left,
+.middle,
+.right {
+  flex: 1 1 33%;
+}
+
+.left,
+.middle,
+.right {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.store-buttons {
+  width: clamp(200px, 50%, 400px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+
+  button {
+    width: 100%;
+  }
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem 1rem;
+  background-color: #666;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .positive {
+    color: #4fd868;
+  }
+
+  .negative {
+    color: #f86d6d;
+  }
+
+  .divider {
+    display: inline-block;
+    margin: 0 1rem;
+  }
+
+  button {
+    padding: 0.25rem 1rem;
+  }
+}
+
+.count {
+  display: block;
+  font-size: 28px;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.count span {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.coin-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 150px;
+  padding: 0;
+}
+
+.coin {
+  max-height: 300px;
+  border-radius: 150px;
+  border: none;
+  background-color: white;
+}
+
+.employees {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  border-radius: 8px;
+  padding: 1rem;
+
+  &.event-negative {
+    background: rgba(202, 4, 4, 0.15);
+  }
+
+  &.event-positive {
+    background: rgba(79, 220, 104, 0.15);
+  }
+}
+
+.intern {
+  font-size: 1.5rem;
+}
+
+.junior {
+  font-size: 2.5rem;
+}
+
+.senior {
+  font-size: 3rem;
+}
+
+.engineer {
+  font-size: 3.5rem;
+}
+
+.scientist {
+  font-size: 4rem;
+}
+
+.robot {
+  font-size: 4.5rem;
+}
+
+.AI_singularity {
+  font-size: 5rem;
+}
+
+.coin3d {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  margin: 0 auto;
+}
+
+.coin3d img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  backface-visibility: hidden;
+}
+
+.stats-list {
+  margin-top: 8px;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.coin3d .back {
+  transform: rotateY(180deg);
+}
+
+.coin3d.spinning {
+  animation: coinSpin 2s ease-out forwards;
+}
+
+@keyframes coinSpin {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  80% {
+    transform: rotateY(1000deg);
+  }
+
+  100% {
+    transform: rotateY(1080deg);
+  }
+}
+
+.coin3d:hover .coin-aura {
+  background-color: rgb(220 191 79 / 45%);
+}
+.coin-aura {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background-color: rgb(220 191 79 / 0%);
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 0;
+  transition: background-color 0.5s ease;
+  animation:
+    auraSpin 6s linear infinite,
+    auraPulse 2.4s ease-in-out infinite;
+}
+@keyframes auraSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes auraPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+.coin3d img {
+  z-index: 2;
+}
+.coin-aura {
+  z-index: 0;
+}
+.event-negative {
+  background: rgba(202, 4, 4, 0.45);
+}
+.event-positive {
+  background: rgba(79, 220, 104, 0.45);
+}
+.coin3d:hover .event-negative {
+  background-color: rgba(202, 4, 4, 0.45) !important;
+}
+.coin3d:hover .event-positive {
+  background-color: rgba(79, 220, 104, 0.45) !important;
+}
