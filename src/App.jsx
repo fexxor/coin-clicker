@@ -424,33 +424,35 @@ function App() {
             <span>Current balance: </span>
             {prettyPrintNumber(count.toFixed(2))} kronor
           </p>
-          <button
-            className={`coin-button ${isClicked ? "clicked" : ""}`}
-            onClick={() => {
-              const clone = coinClickSound.cloneNode();
-              clone.volume = SOUND_VOLUME;
-              clone.play();
+          <div className="coin-button-wrap">
+            <button
+              className={`coin-button ${isClicked ? "clicked" : ""}`}
+              onClick={() => {
+                const clone = coinClickSound.cloneNode();
+                clone.volume = SOUND_VOLUME;
+                clone.play();
 
-              setCount(
-                (count) =>
-                  count + 1 * incomeMultiplier * temporaryPlayerMultiplier.size,
-              );
-              setIsClicked(true);
-              setTimeout(() => setIsClicked(false), 70);
-            }}
-          >
-            <div className={`coin3d ${isSpinning ? "spinning" : "coin"}`}>
-              <div
-                className={`coin-aura ${temporaryPlayerMultiplier.size === 1 ? "" : temporaryPlayerMultiplier.size < 1 ? "event-negative" : "event-positive"}`}
-              ></div>
-              <img className="front" src="img/coin-1.png" alt="Krona" />
-              <img
-                className="back"
-                src="img/coin-1-back.png"
-                alt="Krona baksida"
-              />
-            </div>
-          </button>
+                setCount(
+                  (count) =>
+                    count + 1 * incomeMultiplier * temporaryPlayerMultiplier.size,
+                );
+                setIsClicked(true);
+                setTimeout(() => setIsClicked(false), 70);
+              }}
+            >
+              <div className={`coin3d ${isSpinning ? "spinning" : "coin"}`}>
+                <div
+                  className={`coin-aura ${temporaryPlayerMultiplier.size === 1 ? "" : temporaryPlayerMultiplier.size < 1 ? "event-negative" : "event-positive"}`}
+                ></div>
+                <img className="front" src="img/coin-1.png" alt="Krona" />
+                <img
+                  className="back"
+                  src="img/coin-1-back.png"
+                  alt="Krona baksida"
+                />
+              </div>
+            </button>
+          </div>
           <ul className="stats-list">
             <li>
               Income per click:{" "}
