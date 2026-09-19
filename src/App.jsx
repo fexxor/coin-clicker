@@ -715,14 +715,14 @@ function App() {
       <footer className="footer">
         <div className="multipliers">
           <span className={getMultiplierClass(temporaryPlayerMultiplier.size)}>
-            Temporary player multiplier: x{temporaryPlayerMultiplier.size} (
+            Temporary player multiplier: <br />x{temporaryPlayerMultiplier.size} (
             {temporaryPlayerMultiplier.period} s left)
           </span>
           <span className="divider">|</span>
           <span
             className={getMultiplierClass(temporaryEmployeeMultiplier.size)}
           >
-            Temporary employee multiplier: x{temporaryEmployeeMultiplier.size} (
+            Temporary employee multiplier: <br />x{temporaryEmployeeMultiplier.size} (
             {temporaryEmployeeMultiplier.period} s left)
           </span>
         </div>

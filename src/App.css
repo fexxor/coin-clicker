@@ -253,7 +253,18 @@ section > h2 {
     padding: 0.25rem 1rem;
   }
 
+  br {
+    display: none;
+  }
+
   @media (max-width: 768px) {
+    padding: 0.75rem;
+
+    br {
+      display: inline-block;
+    }
+
+
     .multipliers {
       display: flex;
       flex-direction: column;
@@ -286,6 +297,10 @@ section > h2 {
   border-radius: 150px;
   padding: 0;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
 }
 
 .coin {
