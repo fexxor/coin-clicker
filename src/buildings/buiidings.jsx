@@ -2,26 +2,23 @@ import "./buildings.css";
 
 import { prettyPrintNumber } from "../lib/prettyPrintNumber";
 import { buildings } from "./buildings";
+import { StoreButton } from "../StoreButton";
 
 export function BuildingsStore({ builtBuildings, currentBalance, onClick }) {
   return (
     <div className="store-buttons buildings-store">
       {buildings.map((building, index) => (
         <div className="building" key={index}>
-          <button
+          <StoreButton
+            label={building.name + (builtBuildings.some((b) => b === building.id) ? " ✅" : "")}
+            info={`${building.description} (Cost: ${prettyPrintNumber(building.cost)} kr)`}
             key={building.id}
             disabled={
               currentBalance < building.cost ||
               builtBuildings.some((b) => b === building.id)
             }
             onClick={() => onClick(building)}
-            title={`${building.description} (Cost: ${prettyPrintNumber(building.cost)} kr)`}
-          >
-            {building.name}
-            {builtBuildings.some((b) => b === building.id) && (
-              <span style={{ marginLeft: 16 }}>✅</span>
-            )}
-          </button>
+          />
         </div>
       ))}
     </div>

@@ -143,6 +143,14 @@ body {
   width: 100%;
 }
 
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin: 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
 main {
   display: flex;
   gap: 2rem;
@@ -155,6 +163,10 @@ main {
     border-radius: 5px;
     box-shadow: 0 3px 10px black
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 }
 
 section > h2 {
@@ -165,6 +177,22 @@ section > h2 {
   margin-bottom: 1rem;
   width: 50%;
   text-align: center;
+
+  @media (max-width: 768px) {
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    width: 100%;
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.left .events {
+  @media (max-width: 768px) {
+    max-height: 200px;
+    overflow-y: auto;
+  }
 }
 
 .left,
@@ -191,7 +219,7 @@ section > h2 {
   gap: 0.5rem;
   margin-bottom: 1rem;
 
-  button {
+  @media (max-width: 768px) {
     width: 100%;
   }
 }
@@ -224,6 +252,18 @@ section > h2 {
   button {
     padding: 0.25rem 1rem;
   }
+
+  @media (max-width: 768px) {
+    .multipliers {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .divider {
+      display: none;
+    }
+  }
 }
 
 .count {
@@ -245,6 +285,7 @@ section > h2 {
   cursor: pointer;
   border-radius: 150px;
   padding: 0;
+  user-select: none;
 }
 
 .coin {
@@ -404,4 +445,36 @@ section > h2 {
 }
 .coin3d:hover .event-positive {
   background-color: rgba(79, 220, 104, 0.45) !important;
+}
+
+.store-button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+
+  .buttons {
+    display: flex;
+    gap: 0.5rem;
+
+    .buy {
+      flex: 1 1 auto;
+    }
+
+    .info {
+      flex: 0 0 2.5rem;
+      text-align: center;
+      max-width: 2.5rem;
+      padding: 0.25rem;
+    }
+  }
+
+  .info-content {
+    background-color: rgba(120, 120, 120, 0.05);
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    line-height: 1.15;
+  }
 }

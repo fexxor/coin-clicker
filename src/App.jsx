@@ -21,6 +21,7 @@ import { buildings, getTotalBuildingEfficiency } from "./buildings/buildings.js"
 import { LuxuryItems, LuxuryItemsStore } from "./luxuryItems/luxuryItems.jsx";
 import { EmployeeList } from "./employees/employees.jsx";
 import { Courses } from "./courses/courses.jsx";
+import { StoreButton } from "./StoreButton.jsx";
 
 const coinClickSound = new Audio("sounds/drop-coin.mp3");
 const employInternSound = new Audio("sounds/click.mp3");
@@ -31,6 +32,7 @@ const WORK_INTERVAL_MS = 200;
 const EVENT_INTERVAL_MS = 1000;
 const EVENT_INTERVAL_SECONDS = 123;
 const START_TIME = Date.now();
+const SOUND_VOLUME = 0.05;
 
 let secondsPassed = 0;
 let lastEventUpdate = 0;
@@ -410,6 +412,7 @@ function App() {
       console.log("🚀 ~ App ~ boughtLuxuryItems:", boughtLuxuryItems)
   return (
     <>
+      <h1>Coin Clicker</h1>
       <main className={boughtLuxuryItems.some(id => id === 4) ? "gold" : ""}>
         <section className="left">
           <h2>Events</h2>
@@ -424,7 +427,9 @@ function App() {
           <button
             className={`coin-button ${isClicked ? "clicked" : ""}`}
             onClick={() => {
-              coinClickSound.cloneNode().play();
+              const clone = coinClickSound.cloneNode();
+              clone.volume = SOUND_VOLUME;
+              clone.play();
 
               setCount(
                 (count) =>
@@ -525,75 +530,84 @@ function App() {
           <h2>Store</h2>
           <h3>Workers</h3>
           <div className="store-buttons">
-            <button
+            <StoreButton
+              label="Employ intern"
               onClick={() => {
-                employInternSound.cloneNode().play();
+                const clone = employInternSound.cloneNode()
+                clone.volume = SOUND_VOLUME;
+                clone.play();
                 employIntern();
               }}
               disabled={
                 getEmployeesByType(employees, "intern").length >= MAX_INTERNS
               }
-              title={
+              info={
                 getRecruitmentButtonText(intern) +
                 `. Each intern reduces your own productivity by ${100 - intern.tutoringCostMultiplier * 100}%. You can employ up to ${MAX_INTERNS} interns.`
               }
-            >
-              Employ intern
-            </button>
-            <button
+            />
+            <StoreButton
+              label="Employ junior employee"
               disabled={count < juniorEmployee.recruitmentCost}
               onClick={() => {
-                withdrawalSound.cloneNode().play();
+                const clone = withdrawalSound.cloneNode();
+                clone.volume = SOUND_VOLUME;
+                clone.play();
                 employJunior();
               }}
-              title={getRecruitmentButtonText(juniorEmployee)}
-            >
-              Employ junior employee
-            </button>
-            <button
+              info={getRecruitmentButtonText(juniorEmployee)}
+            />
+            <StoreButton
+              label="Employ senior employee"
               disabled={count < seniorEmployee.recruitmentCost}
               onClick={() => {
-                withdrawalSound.cloneNode().play();
+                const clone = withdrawalSound.cloneNode();
+                clone.volume = SOUND_VOLUME;
+                clone.play();
                 employSenior();
               }}
-              title={getRecruitmentButtonText(seniorEmployee)}
-            >
-              Employ senior employee
-            </button>
-            <button
+              info={getRecruitmentButtonText(seniorEmployee)}
+            />
+            <StoreButton
+              label="Employ engineer"
               disabled={count < engineer.recruitmentCost}
               onClick={() => {
-                withdrawalSound.cloneNode().play();
+                const clone = withdrawalSound.cloneNode();
+                clone.volume = SOUND_VOLUME;
+                clone.play();
                 employEngineer();
               }}
-              title={getRecruitmentButtonText(engineer)}
-            >
-              Employ engineer
-            </button>
+              info={getRecruitmentButtonText(engineer)}
+            />
 
-            <button
+            <StoreButton
+              label="Employ scientist"
               disabled={count < scientist.recruitmentCost}
               onClick={() => {
-                withdrawalSound.cloneNode().play();
+                const clone = withdrawalSound.cloneNode();
+                clone.volume = SOUND_VOLUME;
+                clone.play();
                 employScientist();
               }}
-              title={getRecruitmentButtonText(scientist)}
-            >
-              Employ scientist
-            </button>
+              info={getRecruitmentButtonText(scientist)}
+            />
 
-            <button
+            <StoreButton
+              label="Build robot"
               disabled={count < robot.recruitmentCost}
               onClick={() => {
-                withdrawalSound.cloneNode().play();
+                const clone = withdrawalSound.cloneNode();
+                clone.volume = SOUND_VOLUME;
+                clone.play();
                 employRobot();
               }}
-              title={getRecruitmentButtonText(robot)}
-            >
-              Build robot
-            </button>
+              info={getRecruitmentButtonText(robot)}
+            />
 
-            <button
+            <StoreButton
+              label={getEmployeesByType(employees, "robot").length === 0
+                ? "???"
+                : "Build AI singularity"}
               disabled={
                 count < AISingularity.recruitmentCost ||
                 getEmployeesByType(employees, "robot").length < 1000 ||
@@ -601,20 +615,18 @@ function App() {
                   MAX_AI_SINGULARITIES
               }
               onClick={() => {
-                withdrawalSound.cloneNode().play();
+                const clone = withdrawalSound.cloneNode();
+                clone.volume = SOUND_VOLUME;
+                clone.play();
                 employAISingularity();
               }}
-              title={
+              info={
                 getEmployeesByType(employees, "robot").length === 0
                   ? "?????????"
                   : getRecruitmentButtonText(AISingularity) +
                     ` You need to build 1000 robots before building the singularity. You can only build ${MAX_AI_SINGULARITIES} AI singularity. Obviously.`
               }
-            >
-              {getEmployeesByType(employees, "robot").length === 0
-                ? "???"
-                : "Build AI singularity"}
-            </button>
+            />
           </div>
 
           <h3>Courses</h3>
@@ -623,7 +635,9 @@ function App() {
             completedCourses={completedCourses}
             count={count}
             onClick={(course) => {
-              spinningCoinSound.cloneNode().play();
+              const clone = spinningCoinSound.cloneNode()
+                clone.volume = SOUND_VOLUME;
+                clone.play();
               takeCourse(course);
               spinCoin();
             }}
@@ -636,7 +650,9 @@ function App() {
             completedCourses={completedCourses}
             count={count}
             onClick={(course) => {
-              spinningCoinSound.cloneNode().play();
+              const clone = spinningCoinSound.cloneNode();
+              clone.volume = SOUND_VOLUME;
+              clone.play();
               takeCourse(course);
               spinCoin();
             }}
@@ -647,11 +663,14 @@ function App() {
             builtBuildings={builtBuildings}
             currentBalance={count}
             onClick={(building) => {
+              const clone = spinningCoinSound.cloneNode();
+              clone.volume = SOUND_VOLUME;
+              clone.play();
+
               if (count < building.cost) {
                 return;
               }
 
-              spinningCoinSound.cloneNode().play();
               spinCoin();
               setCount((prevCount) => prevCount - building.cost);
               setBuiltBuildings((prev) => [...prev, building.id]);
@@ -680,7 +699,9 @@ function App() {
                     return;
                   }
 
-                  spinningCoinSound.cloneNode().play();
+                  const clone = spinningCoinSound.cloneNode();
+                  clone.volume = SOUND_VOLUME;
+                  clone.play();
                   spinCoin();
                   setCount((prevCount) => prevCount - item.cost);
                   setBoughtLuxuryItems((prev) => [...prev, item.id]);

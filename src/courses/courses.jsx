@@ -1,4 +1,5 @@
 import { prettyPrintNumber } from "../lib/prettyPrintNumber";
+import { StoreButton } from "../StoreButton";
 
 export function Courses({ courses, completedCourses, count, onClick, hidden }) {
     return (
@@ -6,7 +7,9 @@ export function Courses({ courses, completedCourses, count, onClick, hidden }) {
             { !hidden && courses.map((course) => {
                 const isCompleted = completedCourses.includes(course.id);
                 return (
-                    <button
+                    <StoreButton
+                        label={course.name + (isCompleted ? " ✅" : "")}
+                        info={`${course.description} (Cost: ${prettyPrintNumber(course.cost)} kr)`}
                         key={course.id}
                         disabled={
                             count < course.cost ||
@@ -14,14 +17,11 @@ export function Courses({ courses, completedCourses, count, onClick, hidden }) {
                         }
                         onClick={() => onClick(course)}
                         title={`${course.description} (Cost: ${prettyPrintNumber(course.cost)} kr)`}
-                    >
-                        {course.name}
-                        {isCompleted && <span style={{ marginLeft: 16 }}>✅</span>}
-                    </button>
+                    />
                 );
             })}
             { hidden &&
-                <button disabled title="?????">???</button>
+                <StoreButton label="???" disabled title="?????" info="?????" />
             }
         </div>
     )
