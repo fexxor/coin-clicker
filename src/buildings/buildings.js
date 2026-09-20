@@ -31,11 +31,35 @@ export const buildings = [
     employeesEffect: (employees) => {
       return employees.map((employee) => {
         if (employee.type === "intern") {
+          if (employee.isChunk) {
+            return {
+              ...employee,
+              type: juniorEmployee.type,
+              category: juniorEmployee.category,
+              salary: juniorEmployee.salary * employee.chunkSize,
+              recruitmentCost: juniorEmployee.recruitmentCost * employee.chunkSize,
+              productionRate: juniorEmployee.productionRate * employee.chunkSize,
+              image: juniorEmployee.image,
+              name: `${employee.chunkSize} juniors`,
+            };
+          }
           return {...juniorEmployee, name: employee.name};
         }
 
         if (employee.type === "junior") {
-            return {...seniorEmployee, name: employee.name};
+          if (employee.isChunk) {
+            return {
+              ...employee,
+              type: seniorEmployee.type,
+              category: seniorEmployee.category,
+              salary: seniorEmployee.salary * employee.chunkSize,
+              recruitmentCost: seniorEmployee.recruitmentCost * employee.chunkSize,
+              productionRate: seniorEmployee.productionRate * employee.chunkSize,
+              image: seniorEmployee.image,
+              name: `${employee.chunkSize} seniors`,
+            };
+          }
+          return {...seniorEmployee, name: employee.name};
         }
 
         return employee;

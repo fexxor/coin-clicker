@@ -1,5 +1,5 @@
 import { prettyPrintNumber } from "../lib/prettyPrintNumber";
-import { intern, juniorEmployee, seniorEmployee, engineer, scientist, robot, AISingularity } from "./employees";
+import { intern, juniorEmployee, seniorEmployee, engineer, scientist, robot, AISingularity, getEmployeeCount, getEmployeeSize } from "./employees";
 
 const MAX_EMPLOYEES_DISPLAYED = 56;
 
@@ -17,21 +17,31 @@ export function EmployeeList({employees, type, employeeMultiplier = 1, buildingE
   const employeesOfType = employees.filter((employee) => employee.type === type);
   const effect = buildingEffects[employeesOfType[0]?.category] || 1;
   const adjustedEmployeeMultiplier = employeeMultiplier * effect;
-  const numberOfEmployees = employeesOfType.length;
+  const numberOfEmployees = getEmployeeCount(employees, type);
   const heading = (
     type.charAt(0).toUpperCase() +
     type.slice(1) +
     (numberOfEmployees > 1 ? "s" : "")
   ).replace("_", " ");
+  const unitProductionRate = employeesOfType[0]
+    ? employeesOfType[0].productionRate / getEmployeeSize(employeesOfType[0])
+    : 0;
 
   return (
     employeesOfType.length > 0 && (
       <>
-        <h3 title={"\nProduction rate per employee: " + prettyPrintNumber((employees[0].productionRate * adjustedEmployeeMultiplier).toFixed(2))}>
+        <h3 title={"\nProduction rate per employee: " + prettyPrintNumber((unitProductionRate * adjustedEmployeeMultiplier).toFixed(2))}>
           {heading} ({numberOfEmployees})
         </h3>
         <p className={type}>
-          {employeesOfType.length < MAX_EMPLOYEES_DISPLAYED ? employeesOfType.map((employee, i) => renderEmployee(employee, i)) : EMPLOYEES_MAX_PLACEHOLDER[type]}
+          {numberOfEmployees < MAX_EMPLOYEES_DISPLAYED
+            ? employeesOfType.flatMap((employee, i) => {
+                const size = getEmployeeSize(employee);
+                return Array.from({ length: size }, (_, j) =>
+                  renderEmployee(employee, `${i}-${j}`),
+                );
+              })
+            : EMPLOYEES_MAX_PLACEHOLDER[type]}
         </p>
       </>
     )

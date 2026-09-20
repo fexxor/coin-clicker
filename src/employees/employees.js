@@ -8,7 +8,7 @@ export const intern = {
   recruitmentCost: 0,
   productionRate: 0.2,
   tutoringCostMultiplier: 0.95,
-  name: "Blue eyed intern",
+  name: "Blue Eyed Intern",
   image: "👼",
 };
 
@@ -100,18 +100,25 @@ export function getEmployee(type) {
   switch (type) {
     case "intern":
       return { ...intern, name: internNames[Math.floor(Math.random() * internNames.length)]};
+
     case "junior":
       return { ...juniorEmployee, name: juniorNames[Math.floor(Math.random() * juniorNames.length)]};
+
     case "senior":
       return { ...seniorEmployee, name: seniorNames[Math.floor(Math.random() * seniorNames.length)]};
+
     case "engineer":
       return { ...engineer, name: engineerNames[Math.floor(Math.random() * engineerNames.length)]};
+
     case "scientist":
       return { ...scientist, name: scientistNames[Math.floor(Math.random() * scientistNames.length)]};
+
     case "robot":
       return { ...robot, name: robotNames[Math.floor(Math.random() * robotNames.length)]};
+
     case "AI_singularity":
       return AISingularity;
+
     default:
       return {
         type: "unknown",
@@ -123,4 +130,105 @@ export function getEmployee(type) {
         image: "❓",
       }
   }
+}
+
+/** How many real workers an employee entry represents. */
+export function getEmployeeSize(employee) {
+  return employee.isChunk ? employee.chunkSize : 1;
+}
+
+/** Total workers, optionally filtered by type. */
+export function getEmployeeCount(employees, type) {
+  return employees.reduce((sum, employee) => {
+    if (type !== undefined && employee.type !== type) {
+      return sum;
+    }
+    return sum + getEmployeeSize(employee);
+  }, 0);
+}
+
+/**
+ * Compress many same-type employees into chunk entries.
+ * Re-chunks cleanly from the total headcount so repeated calls never inflate the list.
+ */
+export function getChunkedEmployees(employees, chunkSize) {
+  if (!employees?.length || chunkSize < 2) {
+    return employees ?? [];
+  }
+
+  const byType = new Map();
+
+  for (const employee of employees) {
+    const entry = byType.get(employee.type) ?? {
+      count: 0,
+      template: null,
+      individuals: [],
+    };
+
+    entry.count += getEmployeeSize(employee);
+
+    if (!employee.isChunk) {
+      entry.individuals.push(employee);
+      if (!entry.template) {
+        entry.template = employee;
+      }
+    } else if (!entry.template) {
+      entry.template = employee;
+    }
+
+    byType.set(employee.type, entry);
+  }
+
+  const chunkedEmployees = [];
+
+  for (const [, { count, template, individuals }] of byType) {
+    if (!template || count === 0) {
+      continue;
+    }
+
+    const unitSalary = template.isChunk
+      ? template.salary / template.chunkSize
+      : template.salary;
+    const unitRecruitmentCost = template.isChunk
+      ? template.recruitmentCost / template.chunkSize
+      : template.recruitmentCost;
+    const unitProductionRate = template.isChunk
+      ? template.productionRate / template.chunkSize
+      : template.productionRate;
+
+    const fullChunks = Math.floor(count / chunkSize);
+    const remainder = count % chunkSize;
+
+    for (let i = 0; i < fullChunks; i++) {
+      chunkedEmployees.push({
+        isChunk: true,
+        chunkSize,
+        type: template.type,
+        category: template.category,
+        salary: unitSalary * chunkSize,
+        recruitmentCost: unitRecruitmentCost * chunkSize,
+        productionRate: unitProductionRate * chunkSize,
+        name: `${chunkSize} ${template.type}s`,
+        image: template.image,
+      });
+    }
+
+    for (let i = 0; i < remainder; i++) {
+      if (i < individuals.length) {
+        chunkedEmployees.push(individuals[i]);
+      } else {
+        chunkedEmployees.push({
+          type: template.type,
+          category: template.category,
+          salary: unitSalary,
+          recruitmentCost: unitRecruitmentCost,
+          productionRate: unitProductionRate,
+          name: template.isChunk ? template.type : template.name,
+          image: template.image,
+        });
+      }
+    }
+  }
+
+  return chunkedEmployees;
 }

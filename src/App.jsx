@@ -11,6 +11,8 @@ import {
   MAX_INTERNS,
   MAX_AI_SINGULARITIES,
   getEmployee,
+  getEmployeeCount,
+  getChunkedEmployees,
 } from "./employees/employees.js";
 import "./App.css";
 import { Events } from "./events/events.jsx";
@@ -23,6 +25,8 @@ import { EmployeeList } from "./employees/employees.jsx";
 import { Courses } from "./courses/courses.jsx";
 import { StoreButton } from "./StoreButton.jsx";
 
+const EMPLOYEE_CHUNK_SIZE = 1000;
+const EMPLOYEE_CHUNK_THRESHOLD = 1400;
 const coinClickSound = new Audio("sounds/drop-coin.mp3");
 const employInternSound = new Audio("sounds/click.mp3");
 const withdrawalSound = new Audio("sounds/cash.wav");
@@ -46,6 +50,13 @@ function App() {
   const [eventCyclesPassed, setEventCyclesPassed] = useState(0);
 
   const loadedState = loadState();
+
+  if (getEmployeeCount(loadedState?.employees ?? []) > EMPLOYEE_CHUNK_THRESHOLD) {
+    loadedState.employees = getChunkedEmployees(
+      loadedState.employees,
+      EMPLOYEE_CHUNK_SIZE,
+    );
+  }
 
   const [count, setCount] = useState(loadedState.count);
   const [employees, setEmployees] = useState(loadedState.employees);
@@ -169,22 +180,24 @@ function App() {
       balanceEvent = getMilestoneEvent("oneTrillion", secondsPassed);
     }
 
-    if (employees.length >= 50 && !milestones.fiftyEmployees) {
+    const employeeCount = getEmployeeCount(employees);
+
+    if (employeeCount >= 50 && !milestones.fiftyEmployees) {
       setMilestones((prev) => ({ ...prev, fiftyEmployees: secondsPassed }));
       employerEvent = getMilestoneEvent("fiftyEmployees", secondsPassed);
-    } else if (employees.length >= 100 && !milestones.oneHundredEmployees) {
+    } else if (employeeCount >= 100 && !milestones.oneHundredEmployees) {
       setMilestones((prev) => ({
         ...prev,
         oneHundredEmployees: secondsPassed,
       }));
       employerEvent = getMilestoneEvent("oneHundredEmployees", secondsPassed);
-    } else if (employees.length >= 1000 && !milestones.oneThousandEmployees) {
+    } else if (employeeCount >= 1000 && !milestones.oneThousandEmployees) {
       setMilestones((prev) => ({
         ...prev,
         oneThousandEmployees: secondsPassed,
       }));
       employerEvent = getMilestoneEvent("oneThousandEmployees", secondsPassed);
-    } else if (employees.length >= 10_000 && !milestones.tenThousandEmployees) {
+    } else if (employeeCount >= 10_000 && !milestones.tenThousandEmployees) {
       setMilestones((prev) => ({
         ...prev,
         tenThousandEmployees: secondsPassed,
@@ -262,6 +275,15 @@ function App() {
       lastEventUpdate = secondsPassed;
     }
 
+    if (secondsPassed !== 0 && secondsPassed % 20 === 0) {
+      setEmployees((prevEmployees) => {
+        if (getEmployeeCount(prevEmployees) <= EMPLOYEE_CHUNK_THRESHOLD) {
+          return prevEmployees;
+        }
+        return getChunkedEmployees(prevEmployees, EMPLOYEE_CHUNK_SIZE);
+      });
+    }
+
     saveStateInLocalStorage();
     updateMilestones();
 
@@ -328,7 +350,7 @@ function App() {
   }, [nextEvent]);
 
   const employIntern = () => {
-    if (employees.filter((e) => e.type === "intern").length >= MAX_INTERNS) {
+    if (getEmployeeCount(employees, "intern") >= MAX_INTERNS) {
       return;
     }
     const nextIntern = getEmployee("intern");
@@ -381,9 +403,8 @@ function App() {
   const employAISingularity = () => {
     if (
       count < AISingularity.recruitmentCost ||
-      getEmployeesByType(employees, "AI_singularity").length >=
-        MAX_AI_SINGULARITIES ||
-      getEmployeesByType(employees, "robot").length < 1000
+      getEmployeeCount(employees, "AI_singularity") >= MAX_AI_SINGULARITIES ||
+      getEmployeeCount(employees, "robot") < 1000
     ) {
       return;
     }
@@ -539,9 +560,7 @@ function App() {
                 clone.play();
                 employIntern();
               }}
-              disabled={
-                getEmployeesByType(employees, "intern").length >= MAX_INTERNS
-              }
+              disabled={getEmployeeCount(employees, "intern") >= MAX_INTERNS}
               info={
                 getRecruitmentButtonText(intern) +
                 `. Each intern reduces your own productivity by ${100 - intern.tutoringCostMultiplier * 100}%. You can employ up to ${MAX_INTERNS} interns.`
@@ -606,13 +625,15 @@ function App() {
             />
 
             <StoreButton
-              label={getEmployeesByType(employees, "robot").length === 0
-                ? "???"
-                : "Build AI singularity"}
+              label={
+                getEmployeeCount(employees, "robot") === 0
+                  ? "???"
+                  : "Build AI singularity"
+              }
               disabled={
                 count < AISingularity.recruitmentCost ||
-                getEmployeesByType(employees, "robot").length < 1000 ||
-                getEmployeesByType(employees, "AI_singularity").length >=
+                getEmployeeCount(employees, "robot") < 1000 ||
+                getEmployeeCount(employees, "AI_singularity") >=
                   MAX_AI_SINGULARITIES
               }
               onClick={() => {
@@ -622,7 +643,7 @@ function App() {
                 employAISingularity();
               }}
               info={
-                getEmployeesByType(employees, "robot").length === 0
+                getEmployeeCount(employees, "robot") === 0
                   ? "?????????"
                   : getRecruitmentButtonText(AISingularity) +
                     ` You need to build 1000 robots before building the singularity. You can only build ${MAX_AI_SINGULARITIES} AI singularity. Obviously.`
@@ -734,10 +755,6 @@ function App() {
       </footer>
     </>
   );
-}
-
-function getEmployeesByType(employees, type) {
-  return employees.filter((employee) => employee.type === type);
 }
 
 function getRecruitmentButtonText(employee) {
