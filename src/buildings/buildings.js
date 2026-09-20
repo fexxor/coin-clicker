@@ -100,6 +100,34 @@ export const buildings = [
         ];
       },
     }
+  },
+  {
+    id: 9,
+    icon: "🌀",
+    name: "Ominous Matrix Robot Factory",
+    description:
+      "A scary factory run by a new type of AI, that produces robotic workers automatically. Increases robotic employee efficiency by 800% and adds 10 new robotic employee every second. Makes human employees less efficient (25% less efficient).",
+    cost: 5_000_000_000_000,
+    humanEmployeeEfficiency: 0.75,
+    robotEmployeeEfficiency: 8.0,
+    effect: {
+      interval: 1, // Effect triggers every 1 second
+      action: (employees) => {
+        return [
+          ...employees, 
+          {...robot},
+          {...robot},
+          {...robot},
+          {...robot},
+          {...robot},
+          {...robot},
+          {...robot},
+          {...robot},
+          {...robot},
+          {...robot}
+        ];
+      },
+    }
   }
 ];
 

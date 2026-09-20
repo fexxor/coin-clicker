@@ -409,7 +409,6 @@ function App() {
 
   const buildingEfficiency = getTotalBuildingEfficiency(builtBuildings);
 
-      console.log("🚀 ~ App ~ boughtLuxuryItems:", boughtLuxuryItems)
   return (
     <>
       <h1>Coin Clicker</h1>
