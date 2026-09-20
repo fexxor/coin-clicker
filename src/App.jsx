@@ -315,7 +315,7 @@ function App() {
       } else if (event.ctrlKey && event.key === "8") {
         setCount((prevCount) => prevCount + 1_000_000_000); 
       } else if (event.ctrlKey && event.key === "9") {
-        setCount((prevCount) => prevCount + 10_000_000_000); 
+        setCount((prevCount) => prevCount + 10_000_000_000_000_000_000); 
       } else if (event.ctrlKey && event.key === "e") {
         nextEvent();
       }
@@ -715,20 +715,22 @@ function App() {
         </section>
       </main>
       <footer className="footer">
-        <div className="multipliers">
-          <span className={getMultiplierClass(temporaryPlayerMultiplier.size)}>
-            Temporary player multiplier: <br />x{temporaryPlayerMultiplier.size} (
-            {temporaryPlayerMultiplier.period} s left)
-          </span>
-          <span className="divider">|</span>
-          <span
-            className={getMultiplierClass(temporaryEmployeeMultiplier.size)}
-          >
-            Temporary employee multiplier: <br />x{temporaryEmployeeMultiplier.size} (
-            {temporaryEmployeeMultiplier.period} s left)
-          </span>
+        <div className="footer-left">
+          <div className="multipliers">
+            <span className={getMultiplierClass(temporaryPlayerMultiplier.size)}>
+              Temporary player multiplier: <br />x{temporaryPlayerMultiplier.size} (
+              {temporaryPlayerMultiplier.period} s left)
+            </span>
+            <span className="divider">|</span>
+            <span
+              className={getMultiplierClass(temporaryEmployeeMultiplier.size)}
+            >
+              Temporary employee multiplier: <br />x{temporaryEmployeeMultiplier.size} (
+              {temporaryEmployeeMultiplier.period} s left)
+            </span>
+          </div>
+          <LuxuryItems boughtItems={boughtLuxuryItems} />
         </div>
-        <LuxuryItems boughtItems={boughtLuxuryItems} />
         <button onClick={handleNewGame}>New game</button>
       </footer>
     </>

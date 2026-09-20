@@ -27,6 +27,12 @@
             border-left: 1.75rem solid transparent;
             border-right: 1.75rem solid transparent;
             border-bottom: .75rem solid gray; 
-}
+        }
+
+    }
+    
+    @media (max-width: 768px) {
+        flex-wrap: wrap;
+        justify-content: center;
     }
 }

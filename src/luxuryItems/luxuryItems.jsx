@@ -2,26 +2,23 @@ import "./luxuryItems.css";
 
 import { luxuryItems } from "./luxuryItems";
 import { prettyPrintNumber } from "../lib/prettyPrintNumber";
+import { StoreButton } from "../StoreButton";
 
 export function LuxuryItemsStore({boughtItems, currentBalance, onClick}) {
     return (
         <div className="store-buttons luxury-items-store">
             {luxuryItems.map((item, index) => (
                 <div className="luxury-item" key={index}>
-                    <button
+                    <StoreButton
+                        label={item.name + (boughtItems.some((b) => b === item.id) ? " ✅" : "")}
                         key={item.id}
                         disabled={
                             boughtItems.some((b) => b === item.id) ||
                             item.cost > currentBalance
                         }
                         onClick={() => onClick(item)}
-                        title={`${item.description} (Cost: ${prettyPrintNumber(item.cost)} kr)`}
-                    >
-                        {item.name}
-                        {boughtItems.some((b) => b === item.id) && (
-                            <span style={{ marginLeft: 16 }}>✅</span>
-                        )}
-                    </button>
+                        info={`${item.description} (Cost: ${prettyPrintNumber(item.cost)} kr)`}
+                    />
                 </div>
             ))}
         </div>
