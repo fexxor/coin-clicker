@@ -37,6 +37,24 @@ const EVENT_INTERVAL_MS = 1000;
 const EVENT_INTERVAL_SECONDS = 123;
 const START_TIME = Date.now();
 const SOUND_VOLUME = 0.05;
+const MAX_SOUND_INSTANCES = 5;
+
+// Play sounds in order, but interrupt old sounds if too many new sounds are being played.
+const audioFifo = {
+  _queue: [],
+  push(audio) {
+    const audioClone = audio.cloneNode();
+    this._queue.push(audioClone);
+    if (this._queue.length > MAX_SOUND_INSTANCES) {
+      const oldAudio = this._queue.shift();
+      oldAudio.pause();
+      oldAudio.currentTime = 0;
+      oldAudio.remove();
+    }
+    audioClone.volume = SOUND_VOLUME;
+    audioClone.play();
+  },
+}
 
 let secondsPassed = 0;
 let lastEventUpdate = 0;
@@ -448,10 +466,7 @@ function App() {
             <button
               className={`coin-button ${isClicked ? "clicked" : ""}`}
               onClick={() => {
-                const clone = coinClickSound.cloneNode();
-                clone.volume = SOUND_VOLUME;
-                clone.play();
-
+                audioFifo.push(coinClickSound);
                 setCount(
                   (count) =>
                     count + 1 * incomeMultiplier * temporaryPlayerMultiplier.size,
@@ -555,9 +570,7 @@ function App() {
             <StoreButton
               label="Employ intern"
               onClick={() => {
-                const clone = employInternSound.cloneNode()
-                clone.volume = SOUND_VOLUME;
-                clone.play();
+                audioFifo.push(employInternSound);
                 employIntern();
               }}
               disabled={getEmployeeCount(employees, "intern") >= MAX_INTERNS}
@@ -570,9 +583,7 @@ function App() {
               label="Employ junior employee"
               disabled={count < juniorEmployee.recruitmentCost}
               onClick={() => {
-                const clone = withdrawalSound.cloneNode();
-                clone.volume = SOUND_VOLUME;
-                clone.play();
+                audioFifo.push(withdrawalSound);
                 employJunior();
               }}
               info={getRecruitmentButtonText(juniorEmployee)}
@@ -581,9 +592,7 @@ function App() {
               label="Employ senior employee"
               disabled={count < seniorEmployee.recruitmentCost}
               onClick={() => {
-                const clone = withdrawalSound.cloneNode();
-                clone.volume = SOUND_VOLUME;
-                clone.play();
+                audioFifo.push(withdrawalSound);
                 employSenior();
               }}
               info={getRecruitmentButtonText(seniorEmployee)}
@@ -592,9 +601,7 @@ function App() {
               label="Employ engineer"
               disabled={count < engineer.recruitmentCost}
               onClick={() => {
-                const clone = withdrawalSound.cloneNode();
-                clone.volume = SOUND_VOLUME;
-                clone.play();
+                audioFifo.push(withdrawalSound);
                 employEngineer();
               }}
               info={getRecruitmentButtonText(engineer)}
@@ -604,9 +611,7 @@ function App() {
               label="Employ scientist"
               disabled={count < scientist.recruitmentCost}
               onClick={() => {
-                const clone = withdrawalSound.cloneNode();
-                clone.volume = SOUND_VOLUME;
-                clone.play();
+                audioFifo.push(withdrawalSound);
                 employScientist();
               }}
               info={getRecruitmentButtonText(scientist)}
@@ -616,9 +621,7 @@ function App() {
               label="Build robot"
               disabled={count < robot.recruitmentCost}
               onClick={() => {
-                const clone = withdrawalSound.cloneNode();
-                clone.volume = SOUND_VOLUME;
-                clone.play();
+                audioFifo.push(withdrawalSound);
                 employRobot();
               }}
               info={getRecruitmentButtonText(robot)}
@@ -637,9 +640,7 @@ function App() {
                   MAX_AI_SINGULARITIES
               }
               onClick={() => {
-                const clone = withdrawalSound.cloneNode();
-                clone.volume = SOUND_VOLUME;
-                clone.play();
+                audioFifo.push(withdrawalSound);
                 employAISingularity();
               }}
               info={
@@ -657,9 +658,7 @@ function App() {
             completedCourses={completedCourses}
             count={count}
             onClick={(course) => {
-              const clone = spinningCoinSound.cloneNode()
-                clone.volume = SOUND_VOLUME;
-                clone.play();
+              audioFifo.push(spinningCoinSound);
               takeCourse(course);
               spinCoin();
             }}
@@ -672,9 +671,7 @@ function App() {
             completedCourses={completedCourses}
             count={count}
             onClick={(course) => {
-              const clone = spinningCoinSound.cloneNode();
-              clone.volume = SOUND_VOLUME;
-              clone.play();
+              audioFifo.push(spinningCoinSound);
               takeCourse(course);
               spinCoin();
             }}
@@ -685,9 +682,7 @@ function App() {
             builtBuildings={builtBuildings}
             currentBalance={count}
             onClick={(building) => {
-              const clone = spinningCoinSound.cloneNode();
-              clone.volume = SOUND_VOLUME;
-              clone.play();
+              audioFifo.push(spinningCoinSound);
 
               if (count < building.cost) {
                 return;
@@ -720,10 +715,7 @@ function App() {
                   if (count < item.cost) {
                     return;
                   }
-
-                  const clone = spinningCoinSound.cloneNode();
-                  clone.volume = SOUND_VOLUME;
-                  clone.play();
+                  audioFifo.push(spinningCoinSound);
                   spinCoin();
                   setCount((prevCount) => prevCount - item.cost);
                   setBoughtLuxuryItems((prev) => [...prev, item.id]);
